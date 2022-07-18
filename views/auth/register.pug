@@ -6,4 +6,19 @@ block contenido
       span.font-normal Raices
     h2.text-center.text-2xl.font-extrabold=page
 
-    .mt-8
+    .mt-8.mx-auto.max-w-md
+      .bg-white.py-8.px-4.shadow.rounded-md
+        form.space-y-5
+          div 
+            label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="name") Nombre
+            input#name.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu nombre" type="text" name="nombre")
+          div 
+            label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="email") Email
+            input#email.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu email" type="email" name="email")
+          div 
+            label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password") Password
+            input#password.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu password" type="password" name="password")
+          div 
+            label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password_repeat") Repetir Password
+            input#password_repeat.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Repite tu password" type="password" name="password_repeat")
+          input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-md py-3 cursor-pointer" type="submit" value="Crear cuenta")

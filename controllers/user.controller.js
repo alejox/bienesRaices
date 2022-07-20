@@ -15,25 +15,47 @@ const formRegister = (req, res) => {
 
 const register = async (req, res) => {
   //Validación
-  await check('nombre').notEmpty().withMessage('El nombre no puede ir vacio').run(req);
+  await check('name').notEmpty().withMessage('El nombre no puede ir vacio').run(req);
   await check('email').isEmail().withMessage('No es un email valido').run(req);
   await check('password').isLength({ min: 6 }).withMessage('El password debe ser de al menos 6 caracteres').run(req);
   await check('password_repeat').equals('password').withMessage('El password no coincide').run(req);
 
   let result = validationResult(req);
 
+  //return res.json(result.array())
   // Verificar que el resultado este vacio
-  if(!result.isEmpty()){
+  if (!result.isEmpty()) {
     //Errores
     return res.render('auth/register', {
-      page:'Crear Cuenta'
+      page: 'Crear Cuenta',
+      errors: result.array(),
+      user: {
+        name: req.body.nombre,
+        email: req.body.email
+      }
+    });
+  };
+
+  // Extraer los datos
+  const { name, email, password } = req.body
+
+  // Verificar que el usuario no este duplicado
+
+  const userExist = await User.findOne({ where: { email } });
+
+  if (userExist) {
+    return res.render('auth/register', {
+      page: 'Crear Cuenta',
+      errors: [{ msg: 'El usuario ya esta registrado' }],
+      user: {
+        name: req.body.nombre,
+        email: req.body.email
+      }
     });
   }
+  console.log(userExist)
 
-  res.json(result.array());
-
-  const user = await User.create(req.body);
-  res.json(user)
+  return;
 }
 
 const recoverPassword = (req, res) => {

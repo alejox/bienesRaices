@@ -4,7 +4,7 @@ import db from '../config/db.js'
 
 
 const User = db.define('users', {
-  nombre: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   },

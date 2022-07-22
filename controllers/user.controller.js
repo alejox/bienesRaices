@@ -11,7 +11,8 @@ const formLogin = (req, res) => {
 
 const formRegister = (req, res) => {
   res.render('auth/register', {
-    page: 'Crear cuenta'
+    page: 'Crear cuenta',
+    csrfToken: req.csrfToken()
   })
 };
 
@@ -30,6 +31,7 @@ const register = async (req, res) => {
     //Errores
     return res.render('auth/register', {
       page: 'Crear Cuenta',
+      csrfToken: req.csrfToken(),
       errors: result.array(),
       user: {
         name: req.body.nombre,
@@ -80,13 +82,31 @@ const register = async (req, res) => {
 }
 
 // Función que comprueba una cuenta
-const confirm = (req, res) => {
+const confirm = async (req, res) => {
   const { token } = req.params;
-  
+
   //Verificar si el token es valido
+  const user = await User.findOne({ where: { token } });
+
+  if (!user) {
+    return res.render('auth/verifyAccount', {
+      page: 'Error al confirmar tu cuenta',
+      msg: 'Hubo un error al confirmar tu cuenta, intenta de nuevo',
+      err: true
+    })
+  }
+
 
   //Confirmar la cuenta
-  
+  user.token = null;
+  user.confirm = true;
+  await user.save();
+
+  return res.render('auth/verifyAccount', {
+    page: 'Cuenta confirmada',
+    msg: 'La cuenta se confirmo correctamente'
+  })
+
 }
 
 const recoverPassword = (req, res) => {
@@ -99,7 +119,7 @@ const recoverPassword = (req, res) => {
 export {
   formLogin,
   formRegister,
-  recoverPassword,
+  register,
   confirm,
-  register
+  recoverPassword
 }
